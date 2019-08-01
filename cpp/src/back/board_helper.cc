@@ -13,7 +13,7 @@ void board::placePiece(const coordinate &pos, const occupant piece) {
     // then we set the piece
     t->piece = piece;
     // create a new information
-    info *inform = new info(pos);
+    tile::info *inform = new tile::info(pos);
 
     // first scan for the nearby pieces
     for (int i = 0; i < 8; i++)

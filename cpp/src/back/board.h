@@ -56,8 +56,7 @@ namespace reversi
         const constCoordList *getValidMoves();
         board();
         // copy constructor
-        // board(const board &b);
-        // board(const board &copy);
+        board(const board &copy);
         ~board();
     };
 } // namespace reversi

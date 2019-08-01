@@ -6,19 +6,17 @@ using namespace std;
 board::board() {
     typedef array<tile*,BOARD_SIDE_LENGTH> tilearray;
 
-    // for initializing the entire board
-    tilearray *column;
-    tile *t;
     // for placing pieces after
     const int half = (BOARD_SIDE_LENGTH-1)/2;
     coordinate c(half,half);
+
     occupant o;
     for (int i = 0; i < BOARD_SIDE_LENGTH; i++)
     {
-        column = new tilearray();
+        tilearray *column = new tilearray();
         for (int j = 0; j < BOARD_SIDE_LENGTH; j++)
         {
-            t = new tile();
+            tile *t = new tile();
             column->at(j) = t;
         }
         fullboard.at(i) = column;
@@ -58,4 +56,41 @@ board::~board() {
         delete(fullboard[i]);
     }
     clearValidMoves();
+}
+
+board::board(const board &copy): who(copy.who),winner(copy.winner),\
+isGameOver(copy.isGameOver) {
+    typedef array<tile*,BOARD_SIDE_LENGTH> tilearray;
+
+    // do the same thing as the constructor but copy the tiles
+    for (int i = 0; i < BOARD_SIDE_LENGTH; i++)
+    {
+        tilearray *column = new tilearray();
+        for (int j = 0; j < BOARD_SIDE_LENGTH; j++)
+        {
+            tile *t = new tile(*copy.fullboard[i]->at(j));
+            column->at(j) = t;
+        }
+        fullboard.at(i) = column;
+    }
+
+    // use the positions to get the appropriate tiles
+    for (auto &&wTiles : copy.whiteEdgeTiles)
+    {
+        whiteEdgeTiles.push_front(
+            fullboard[wTiles->inf->position.x]->at(wTiles->inf->position.y) \
+        );
+    }
+    for (auto &&bTiles : copy.blackEdgeTiles)
+    {
+        blackEdgeTiles.push_front(
+            fullboard[bTiles->inf->position.x]->at(bTiles->inf->position.y) \
+        );
+    }
+
+    // the moveList is simple to do
+    for (auto &&vmoves : copy.validMoves)
+    {
+        validMoves.push_front(new move(*vmoves));
+    }
 }
