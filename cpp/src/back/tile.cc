@@ -14,7 +14,7 @@ tile::~tile() {
 }
 
 info::~info() {
-    for (auto it = adjEmptyTiles.cbegin(); it != adjEmptyTiles.cend; it++) {
+    for (auto it = adjEmptyTiles.cbegin(); it != adjEmptyTiles.cend(); it++) {
         delete(*it);
     }
 }

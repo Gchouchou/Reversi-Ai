@@ -1,5 +1,5 @@
 CC := g++
-CFLAGS_PRE := -Wall -MMD
+CFLAGS_PRE := -std=c++17 -Wall -MMD
 CFLAGS_DEBUG := -g
 SRCDIR := src
 BUILDDIR := build

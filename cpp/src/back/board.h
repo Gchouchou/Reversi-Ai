@@ -26,7 +26,6 @@ namespace reversi
         tileList blackEdgeTiles;
         occupant who;
         moveList validMoves;
-        int turnsLeft;
         occupant winner;
         bool isGameOver;
 
@@ -40,19 +39,24 @@ namespace reversi
         bool checkDirection(const coordinate &start, const direction dir, const occupant player);
         // clear list and free memory
         void clearValidMoves();
+        // set winner
+        void setGameEnd();
         // flip all the tiles in a direction, THIS FUNCTION DOES NOT HAVE SAFETY CHECK
         void flipTiles(const coordinate &start, const direction dir, const occupant player);
 
     public:
         const occupant getWinner() { return winner; }
+        const occupant getWho() { return who; }
         const bool gameOver() { return isGameOver; }
 
         const tile *getTile(const coordinate &coord) const;
-        // returns true if the move is valid
+        // returns true if the game ends
         bool playTurn(const coordinate &coord);
         // returns a list of coordinates, must be memory managed
         const constCoordList *getValidMoves();
         board();
+        // copy constructor
+        // board(const board &b);
         // board(const board &copy);
         ~board();
     };

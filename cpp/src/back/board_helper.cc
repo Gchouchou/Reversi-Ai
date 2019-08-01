@@ -9,13 +9,9 @@ void board::placePiece(const coordinate &pos, const occupant piece) {
     tile *t = fullboard[pos.x]->at(pos.y);
     // make sure there is no piece and that it's a legit piece
     assert(t->piece == empty && isOccupied(piece));
-    coordinate coord;
-    direction dir;
 
     // then we set the piece
     t->piece = piece;
-    // less space left
-    turnsLeft--;
     // create a new information
     info *inform = new info(pos);
 
@@ -23,9 +19,9 @@ void board::placePiece(const coordinate &pos, const occupant piece) {
     for (int i = 0; i < 8; i++)
     {
         // go in every direction...
-        dir = dirs[i];
+        direction dir = dirs[i];
         // copy the position
-        coord = pos;
+        coordinate coord = pos;
         // check if it is vacant and valid
         if (coord.shift(dir) && fullboard[coord.x]->at(coord.y)->piece == empty) {
             // say there's one more free space
@@ -111,8 +107,6 @@ void board::findValidMoves() {
     // clear list
     clearValidMoves();
 
-    // dummy
-    move *validMove;
 
     // for every enemy piece...
     for (auto &&t : *l)
@@ -138,9 +132,8 @@ void board::findValidMoves() {
             {
                 if (checkDirection(m->position,m->mainDir,who))
                 {
-                    validMove = new move(*m);
+                    auto validMove = new move(*m);
                     validMoves.push_front(validMove);
-                    break;
                 }
             }
         }
@@ -149,10 +142,9 @@ void board::findValidMoves() {
 
 bool board::checkDirection(const coordinate &start, const direction dir, const occupant player) {
     coordinate c = start;
-    occupant pieceColor;
     while (c.shift(dir)) {
         // we check what is on this piece
-        pieceColor = fullboard[c.x]->at(c.y)->piece;
+        occupant pieceColor = fullboard[c.x]->at(c.y)->piece;
         // if we encounter unoccupied space we failed
         if (!isOccupied(pieceColor))
         {
@@ -164,6 +156,7 @@ bool board::checkDirection(const coordinate &start, const direction dir, const o
             return true;
         }
     }
+    // if we reach out of bounds
     return false;
 }
 
@@ -179,13 +172,12 @@ void board::clearValidMoves() {
 void board::flipTiles(const coordinate &start, const direction dir, const occupant player) {
     // dummy coordinate
     coordinate c = start;
-    tile *t;
     assert(isOccupied(player));
 
     while (c.shift(dir))
     {
         // get the tile
-        t = fullboard[c.x]->at(c.y);
+        tile *t = fullboard[c.x]->at(c.y);
         // when we reach our own piece we stop
         if (t->piece == player)
         {
@@ -193,5 +185,39 @@ void board::flipTiles(const coordinate &start, const direction dir, const occupa
         }
         // flips it otherwise
         t->flipOccupant();
+    }
+}
+
+
+void board::setGameEnd() {
+    isGameOver = true;
+    // tally points
+    int w=0,b=0;
+    for (int i = 0; i < BOARD_SIDE_LENGTH; i++)
+    {
+        for (int j = 0; j < BOARD_SIDE_LENGTH; j++)
+        {
+            coordinate ab(i,j);
+            auto tilez = fullboard[i]->at(j);
+            if (tilez->piece == white)
+            {
+                w++;
+            } else
+            {
+                if (tilez->piece == black) {
+                    b++;
+                }
+            }
+        }
+    }
+    if (w > b)
+    {
+        winner = white;
+    }
+    else if (b > w) {
+        winner = black;
+    }
+    else {
+        winner = tie;
     }
 }

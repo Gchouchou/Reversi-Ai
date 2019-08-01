@@ -10,7 +10,7 @@ namespace reversi {
 
     class move
     {
-    typedef std::forward_list<const direction> dirList;
+    typedef std::forward_list<direction> dirList;
 
     private:
         const coordinate position;

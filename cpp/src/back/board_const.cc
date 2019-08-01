@@ -3,14 +3,14 @@
 using namespace reversi;
 using namespace std;
 
-board::board() :turnsLeft(BOARD_SIDE_LENGTH*BOARD_SIDE_LENGTH) {
+board::board() {
     typedef array<tile*,BOARD_SIDE_LENGTH> tilearray;
 
     // for initializing the entire board
     tilearray *column;
     tile *t;
     // for placing pieces after
-    const int half = BOARD_SIDE_LENGTH/2;
+    const int half = (BOARD_SIDE_LENGTH-1)/2;
     coordinate c(half,half);
     occupant o;
     for (int i = 0; i < BOARD_SIDE_LENGTH; i++)
@@ -57,4 +57,5 @@ board::~board() {
         // delete the array
         delete(fullboard[i]);
     }
+    clearValidMoves();
 }

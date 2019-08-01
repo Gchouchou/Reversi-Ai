@@ -40,7 +40,7 @@ namespace reversi
         void flipOccupant();
 
         // getter
-        const occupant getPiece() {return piece;}
+        const occupant getPiece() const{return piece;}
     friend class board;
     };
     
