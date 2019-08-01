@@ -7,24 +7,53 @@
 #include "move.h"
 
 #include <array>
-#include <list>
+#include <forward_list>
 
 namespace reversi
 {
     class board
     {
     private:
+        // type defs
+        typedef std::forward_list<tile*> tileList;
+        typedef std::forward_list<move*> moveList;
+        typedef std::forward_list<const coordinate*> constCoordList;
+
+        // class members
         std::array<std::array<tile*,BOARD_SIDE_LENGTH>*,BOARD_SIDE_LENGTH> fullboard;
         // keep track of edge black/white tiles
-        std::list<tile*> whiteEdgeTiles;
-        std::list<tile*> blackEdgeTiles;
+        tileList whiteEdgeTiles;
+        tileList blackEdgeTiles;
         occupant who;
+        moveList validMoves;
         int turnsLeft;
+        occupant winner;
+        bool isGameOver;
+
+        // place a piece at a coordinate
+        void placePiece(const coordinate &pos, const occupant piece);
+        // get the right list
+        tileList *getList(const occupant color);
+        // find the valid moves after playing a turn
+        void findValidMoves();
+        // tests if this is a possible move
+        bool checkDirection(const coordinate &start, const direction dir, const occupant player);
+        // clear list and free memory
+        void clearValidMoves();
+        // flip all the tiles in a direction, THIS FUNCTION DOES NOT HAVE SAFETY CHECK
+        void flipTiles(const coordinate &start, const direction dir, const occupant player);
+
     public:
-        const tile *getTile(const coordinate &coord);
-        void playTurn(const coordinate &coord);
-        const std::list<const move*> *getValidMoves();
+        const occupant getWinner() { return winner; }
+        const bool gameOver() { return isGameOver; }
+
+        const tile *getTile(const coordinate &coord) const;
+        // returns true if the move is valid
+        bool playTurn(const coordinate &coord);
+        // returns a list of coordinates, must be memory managed
+        const constCoordList *getValidMoves();
         board();
+        // board(const board &copy);
         ~board();
     };
 } // namespace reversi
