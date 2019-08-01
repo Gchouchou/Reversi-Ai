@@ -23,14 +23,13 @@ void board::placePiece(const coordinate &pos, const occupant piece) {
         // copy the position
         coordinate coord = pos;
         // check if it is vacant and valid
-        if (coord.shift(dir) && fullboard[coord.x]->at(coord.y)->piece == empty) {
-            // say there's one more free space
-            ++inform->freeSpaces;
-            // record it, flip direction so that we know where to move
-            inform->adjEmptyTiles.push_front(new move(coord,flip(dir)));
-        }
-        else
-        {
+        if (coord.shift(dir)) {
+            if (fullboard[coord.x]->at(coord.y)->piece == empty) {
+                // say there's one more free space
+                ++inform->freeSpaces;
+                // record it, flip direction so that we know where to move
+                inform->adjEmptyTiles.push_front(new move(coord,flip(dir)));
+            }
             // we now check if it's occupied
             if (isOccupied(fullboard[coord.x]->at(coord.y)->piece))
             {
@@ -75,6 +74,8 @@ void board::placePiece(const coordinate &pos, const occupant piece) {
                 }
             }
         }
+        
+ 
     }
 
     // make sure we actually have relevant information

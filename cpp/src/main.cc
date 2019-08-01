@@ -10,17 +10,16 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
     board BEHOLD;
-    auto moves = BEHOLD.getValidMoves();
-    auto c =coordinate(1,1);
-    for (auto &&i : *moves)
+    auto c =coordinate(0,1);
+    BEHOLD.playTurn(c);
+    for (size_t i = 0; i < 4; i++)
     {
-        cout << i->x << "," << i->y << "\n";
+        for (size_t j = 0; j < 4; j++)
+        {
+            cout << BEHOLD.getTile(coordinate(i,j))->getPiece();
+        }
+        cout << "\n";
     }
     cout << flush;
-    for (auto &&i : *moves)
-    {
-        delete(i);
-    }
-    delete(moves);
     return 0;
 }
