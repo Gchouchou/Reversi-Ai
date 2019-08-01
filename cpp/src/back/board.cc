@@ -1,6 +1,6 @@
 #include "board.h"
 #include "direction.h"
-
+#define NDEBUG
 #include <assert.h>
 
 using namespace reversi;

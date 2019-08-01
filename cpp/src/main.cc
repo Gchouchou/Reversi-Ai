@@ -10,11 +10,11 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
     board BEHOLD;
-    auto c =coordinate(0,1);
+    auto c =coordinate(2,3);
     BEHOLD.playTurn(c);
-    for (size_t i = 0; i < 4; i++)
+    for (size_t i = 0; i < 8; i++)
     {
-        for (size_t j = 0; j < 4; j++)
+        for (size_t j = 0; j < 8; j++)
         {
             cout << BEHOLD.getTile(coordinate(i,j))->getPiece();
         }

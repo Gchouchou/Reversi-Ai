@@ -1,5 +1,5 @@
 #include "tile.h"
-
+#define NDEBUG
 #include <assert.h>
 
 using namespace reversi;

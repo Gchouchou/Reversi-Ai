@@ -1,5 +1,5 @@
 #include "board.h"
-
+#define NDEBUG
 #include <algorithm>
 #include <assert.h>
 
