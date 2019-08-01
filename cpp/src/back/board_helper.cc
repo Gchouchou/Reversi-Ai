@@ -162,12 +162,7 @@ bool board::checkDirection(const coordinate &start, const direction dir, const o
 }
 
 void board::clearValidMoves() {
-    const move *ptr;
-    while (!validMoves.empty()) {
-        ptr = validMoves.front();
-        validMoves.pop_front();
-        delete(ptr);
-    }
+    clearList<move>(validMoves);
 }
 
 void board::flipTiles(const coordinate &start, const direction dir, const occupant player) {

@@ -11,13 +11,24 @@
 
 namespace reversi
 {
+    typedef std::forward_list<const coordinate*> validMoveList;
+    
+    // template deleter
+    template <class t>
+    void clearList(std::forward_list<t*> &list){
+        while (!list.empty())
+        {
+            t *ptr = list.front();
+            list.pop_front();
+            delete(ptr);
+        }
+    }
     class board
     {
     private:
         // type defs
         typedef std::forward_list<tile*> tileList;
         typedef std::forward_list<move*> moveList;
-        typedef std::forward_list<const coordinate*> constCoordList;
 
         // class members
         std::array<std::array<tile*,BOARD_SIDE_LENGTH>*,BOARD_SIDE_LENGTH> fullboard;
@@ -53,7 +64,7 @@ namespace reversi
         // returns true if the game ends
         bool playTurn(const coordinate &coord);
         // returns a list of coordinates, must be memory managed
-        const constCoordList *getValidMoves();
+        void getValidMoves (validMoveList &list) const;
         board();
         // copy constructor
         board(const board &copy);

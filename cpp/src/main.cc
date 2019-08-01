@@ -21,6 +21,13 @@ int main(int argc, char const *argv[])
         }
         cout << "\n";
     }
+    validMoveList v;
+    BEHOLD.getValidMoves(v);
+    for (auto &&coord : v)
+    {
+        cout << coord->x << "," << coord->y << "\n";
+    }
     cout << flush;
+    clearList<const coordinate>(v);
     return 0;
 }

@@ -9,13 +9,11 @@ const tile *board::getTile(const coordinate &coord) const {
     return fullboard[coord.x]->at(coord.y);
 }
 
-const board::constCoordList *board::getValidMoves() {
-    constCoordList *list = new constCoordList();
+void board::getValidMoves(validMoveList &list) const{
     for (auto &&mov : validMoves)
     {
-        list->push_front(new coordinate((*mov).position));
+        list.push_front(new coordinate((*mov).position));
     }
-    return list;
 }
 
 
