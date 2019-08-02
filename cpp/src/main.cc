@@ -8,7 +8,8 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
     gui *a = new gui();
-    a->input();
+    while(a->input())
+    ;
     delete(a);
     
 }

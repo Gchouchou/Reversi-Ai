@@ -41,10 +41,6 @@ namespace reversi {
             
         }
 
-    friend bool operator==(const move &move1, const move &move2){
-        return move1.position == move2.position;
-    }
-
     friend class board;
     };
 } // namespace reversi

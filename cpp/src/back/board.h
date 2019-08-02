@@ -54,7 +54,16 @@ namespace reversi
         // place a piece at a coordinate
         void placePiece(const coordinate &pos, const occupant piece);
         // get the right list
-        tileList *getList(const occupant color);
+        inline tileList *getList(const occupant color) {
+            if (color == white)
+            {
+                return &whiteEdgeTiles;
+            }
+            else 
+            {
+                return &blackEdgeTiles;
+            }
+        }
         // find the valid moves after playing a turn
         void findValidMoves();
         // tests if this is a possible move

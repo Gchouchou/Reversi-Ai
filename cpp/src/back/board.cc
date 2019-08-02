@@ -10,6 +10,7 @@ const tile *board::getTile(const coordinate &coord) const {
 }
 
 void board::getValidMoves(validMoveList &list) const{
+    clearList(list);
     for (auto &&mov : validMoves)
     {
         list.push_back(new coordinate((*mov).position));
@@ -17,7 +18,6 @@ void board::getValidMoves(validMoveList &list) const{
 }
 
 bool board::playTurn(const coordinate &coord) {
-    gameStarted = true;
     // if the game is over we don't need to do anything
     if (isGameOver)
     {
@@ -88,6 +88,7 @@ void board::setDisabled(const coordinate &c) {
 void board::clearDisabled() {
     if (!gameStarted)
     {
+        gameStarted = true;
         for (auto &&w : whiteEdgeTiles)
         {
             auto l = &w->inf->adjEmptyTiles;

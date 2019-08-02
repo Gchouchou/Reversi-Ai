@@ -15,6 +15,7 @@ namespace reversi
         coordinate cursor;
         coordinate suggested;
         validMoveList validMoves;
+        int curIndex;
         // to prevent too many updates
         std::mutex mutex;
 
@@ -22,7 +23,10 @@ namespace reversi
         // if it's false we do a shallow update
         void updateWin(bool updateType = true);
     public:
-        // take input from user
+        // retun false when the game is over/or aborted
+        // press n to go to next valid move
+        // press enter to lock in move
+        // press q to abort this returns true
         bool input();
 
         gui();

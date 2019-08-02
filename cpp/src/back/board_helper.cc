@@ -5,6 +5,17 @@
 
 using namespace reversi;
 
+namespace reversi {
+    struct compMoveptr {
+        compMoveptr(const move &m):m(m){}
+        bool operator()(const move *n) const {
+            return *m.getposition() == *n->getposition();
+        }
+        private:
+        const move &m;
+    };
+}
+
 void board::placePiece(const coordinate &pos, const occupant piece) {
     tile *t = fullboard[pos.x]->at(pos.y);
     // make sure there is no piece and that it's a legit piece
@@ -88,18 +99,6 @@ void board::placePiece(const coordinate &pos, const occupant piece) {
     }
 }
 
-board::tileList *board::getList(const occupant color) {
-    assert(isOccupied(color));
-    if (color == white)
-    {
-        return &whiteEdgeTiles;
-    }
-    else 
-    {
-        return &blackEdgeTiles;
-    }
-}
-
 void board::findValidMoves() {
     // get the list of tiles from opposing side
     tileList *l = getList(flip(who));
@@ -116,7 +115,7 @@ void board::findValidMoves() {
             // determine its relative position...already did
             
             // if it is not already valid
-            auto vmove = find(validMoves.begin(),validMoves.end(),m);
+            auto vmove = find_if(validMoves.begin(),validMoves.end(),compMoveptr(*m));
             if (vmove != validMoves.end())
             {
                 // make sure it has a list
@@ -141,18 +140,21 @@ void board::findValidMoves() {
 
 bool board::checkDirection(const coordinate &start, const direction dir, const occupant player) {
     coordinate c = start;
-    while (c.shift(dir)) {
-        // we check what is on this piece
-        occupant pieceColor = fullboard[c.x]->at(c.y)->piece;
-        // if we encounter unoccupied space we failed
-        if (!isOccupied(pieceColor))
-        {
-            return false;
-        }
-        // if we encounter our own piece we good
-        if (pieceColor == player)
-        {
-            return true;
+    // first shift by one
+    if (c.shift(dir) && fullboard[c.x]->at(c.y)->piece == flip(player)) {
+        while (c.shift(dir)) {
+            // we check what is on this piece
+            occupant pieceColor = fullboard[c.x]->at(c.y)->piece;
+            // if we encounter unoccupied space we failed
+            if (!isOccupied(pieceColor))
+            {
+                return false;
+            }
+            // if we encounter our own piece we good
+            if (pieceColor == player)
+            {
+                return true;
+            }
         }
     }
     // if we reach out of bounds
@@ -179,6 +181,19 @@ void board::flipTiles(const coordinate &start, const direction dir, const occupa
         }
         // flips it otherwise
         t->flipOccupant();
+        auto old = getList(flip(player));
+        auto newt = getList(player);
+        auto bit = old->before_begin(), it = old->begin();
+        while (it != old->end())
+        {
+            if ((*it) == t)
+            {
+                newt->push_front(t);
+                old->erase_after(bit);
+                break;
+            }
+            ++bit,++it;
+        }
     }
 }
 
