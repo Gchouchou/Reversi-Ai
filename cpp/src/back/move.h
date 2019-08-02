@@ -28,9 +28,18 @@ namespace reversi {
             delete(directions);
         }
 
-    friend bool operator==(const move &move1, const move &move2){
-        return move1.position == move2.position;
-    }
+        move(const move &copy):position(copy.position), mainDir(copy.mainDir){
+            if (copy.directions != nullptr) {
+                for (auto &&d : *copy.directions)
+                {
+                    directions->push_front(d);
+                }
+            } else
+            {
+                directions = nullptr;
+            }
+            
+        }
 
     friend class board;
     };

@@ -4,9 +4,10 @@ CFLAGS_DEBUG := -g
 SRCDIR := src
 BUILDDIR := build
 INCDIR := include
+SRCEXT := cc
+LIBS := -lncurses
 TARGET := bin/reversi
 
-SRCEXT := cc
 SOURCES := $(shell find $(SRCDIR) -type f -name '*.$(SRCEXT)')
 SOURCENAMES:= $(notdir $(SOURCES))
 SOURCEDIRS := $(sort $(dir $(SOURCES)))
@@ -20,7 +21,7 @@ vpath %.$(SRCEXT) $(SOURCEDIRS)
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
-	$(CC) $^ -o $@
+	$(CC) $^ $(LIBS) -o $@
 
 $(BUILDDIR)/%.o: %.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
