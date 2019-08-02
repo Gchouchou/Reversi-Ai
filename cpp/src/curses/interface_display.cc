@@ -4,8 +4,6 @@
 
 #include <ncurses.h>
 
-using namespace reversi;
-
 namespace reversi {
     inline void writeChar(char ch,const coordinate &c, coordinate &cursor) {
         if (c == cursor)
@@ -21,8 +19,8 @@ namespace reversi {
     }
 }
 
-
-void gui::updateWin() {
+void reversi::gui::updateWin(bool updateType) {
+    typedef reversi::coordinate coordinate;
     // mutex for multi threading
     std::lock_guard<std::mutex> lockGuard(mutex);
     if (updateType) {
@@ -34,9 +32,9 @@ void gui::updateWin() {
                 switch (currBoard.getTile(c)->getPiece())
                 {
                 case empty:
-                    attron(COLOR_PAIR(EMPTY_PAIR));
-                    writeChar(EMPTY,c,cursor);
-                    attroff(COLOR_PAIR(EMPTY_PAIR));
+                    attron(COLOR_PAIR(EMPTY_PAIR)| A_ALTCHARSET);
+                    reversi::writeChar(ACS_BULLET,c,cursor);
+                    attroff(COLOR_PAIR(EMPTY_PAIR)| A_ALTCHARSET);
                     break;
                 case disabled:
                     attron(COLOR_PAIR(DISABLED_PAIR));
@@ -45,12 +43,12 @@ void gui::updateWin() {
                     break;
                 case white:
                     attron(COLOR_PAIR(WHITE_PAIR));
-                    writeChar(WHITE,c,cursor);
+                    reversi::writeChar(WHITE,c,cursor);
                     attroff(COLOR_PAIR(WHITE_PAIR));
                     break;
                 case black:
                     attron(COLOR_PAIR(BLACK_PAIR));
-                    writeChar(BLACK,c,cursor);
+                    reversi::writeChar(BLACK,c,cursor);
                     attroff(COLOR_PAIR(BLACK_PAIR));
                     break;
                 }
@@ -59,12 +57,26 @@ void gui::updateWin() {
     }
     for (auto &&vm : validMoves)
     {
-        attron(COLOR_PAIR(VALID_PAIR));
-        writeChar(VALID,*vm,cursor);
+        attron(COLOR_PAIR(VALID_PAIR)| A_ALTCHARSET);
+        writeChar(ACS_DIAMOND,*vm,cursor);
         attroff(COLOR_PAIR(VALID_PAIR));
     }
-    attron(COLOR_PAIR(SUGGESTED_PAIR));
-    writeChar(SUGGESTED,suggested,cursor);
-    attroff(COLOR_PAIR(SUGGESTED_PAIR));
+    if (suggested.x != -1)
+    {
+        attron(COLOR_PAIR(SUGGESTED_PAIR)|A_ALTCHARSET);
+        reversi::writeChar(ACS_DIAMOND,suggested,cursor);
+        attroff(COLOR_PAIR(SUGGESTED_PAIR)|A_ALTCHARSET);
+    }
+    switch (currBoard.getWho())
+    {
+    case white:
+        mvaddch(BOARD_SIDE_LENGTH,0,WHITE);
+        break;
+    case black:
+        mvaddch(BOARD_SIDE_LENGTH,0,BLACK);
+        break;
+    }
+    mvaddstr(BOARD_SIDE_LENGTH,1,"'s Turn");
+    wmove(stdscr,cursor.y,cursor.x);
     refresh();
 }

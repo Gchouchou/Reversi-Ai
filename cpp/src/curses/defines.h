@@ -9,11 +9,8 @@
 #define SUGGESTED_PAIR 4
 
 #define DISABLED '!'
-#define EMPTY '·'
 #define WHITE 'O'
 #define BLACK 'X'
-#define VALID '■'
-#define SUGGESTED '■'
 
 
 #endif

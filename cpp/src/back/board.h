@@ -28,8 +28,8 @@ namespace reversi
     void clearList(std::vector<t*> &list){
         while (!list.empty())
         {
-            t *ptr = list.front();
-            list.pop_front();
+            t *ptr = list.back();
+            list.pop_back();
             delete(ptr);
         }
     }
@@ -49,6 +49,7 @@ namespace reversi
         moveList validMoves;
         occupant winner;
         bool isGameOver;
+        bool gameStarted;
 
         // place a piece at a coordinate
         void placePiece(const coordinate &pos, const occupant piece);
@@ -66,9 +67,14 @@ namespace reversi
         void flipTiles(const coordinate &start, const direction dir, const occupant player);
 
     public:
-        const occupant getWinner() { return winner; }
-        const occupant getWho() { return who; }
-        const bool gameOver() { return isGameOver; }
+        const occupant getWinner() const{ return winner; }
+        const occupant getWho() const{ return who; }
+        const bool gameOver() const{ return isGameOver; }
+
+        // set a disabled case
+        void setDisabled(const coordinate &c);
+        // clears disabled cases from above function, must be used immediately after
+        void clearDisabled();
 
         const tile *getTile(const coordinate &coord) const;
         // returns true if the game ends

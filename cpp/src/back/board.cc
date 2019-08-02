@@ -16,8 +16,8 @@ void board::getValidMoves(validMoveList &list) const{
     }
 }
 
-
 bool board::playTurn(const coordinate &coord) {
+    gameStarted = true;
     // if the game is over we don't need to do anything
     if (isGameOver)
     {
@@ -66,4 +66,66 @@ bool board::playTurn(const coordinate &coord) {
         }
     }
     return false;
+}
+
+void board::setDisabled(const coordinate &c) {
+    if (!gameStarted) {
+        tile *t = fullboard[c.x]->at(c.y);
+        if (!isOccupied(t->piece))
+        {
+            if (t->piece == disabled)
+            {
+                t->piece = empty;
+            } else
+            {
+                t->piece = disabled;
+            }
+        }
+        findValidMoves();
+    }
+}
+
+void board::clearDisabled() {
+    if (!gameStarted)
+    {
+        for (auto &&w : whiteEdgeTiles)
+        {
+            auto l = &w->inf->adjEmptyTiles;
+            auto bit = l->before_begin();
+            auto it = l->begin();
+            while (it != l->end())
+            {
+                if (fullboard[(*it)->position.x]->at((*it)->position.y)->piece == disabled)
+                {
+                    ++it;
+                    l->erase_after(bit);
+                    w->inf->freeSpaces--;
+                }
+                else
+                {
+                    ++it,++bit;
+                }
+            }
+        }
+        for (auto &&b : blackEdgeTiles)
+        {
+            auto l = &b->inf->adjEmptyTiles;
+            auto bit = l->before_begin();
+            auto it = l->begin();
+            while (it != l->end())
+            {
+                if (fullboard[(*it)->position.x]->at((*it)->position.y)->piece == disabled)
+                {
+                    ++it;
+                    l->erase_after(bit);
+                    b->inf->freeSpaces--;
+                }
+                else
+                {
+                    ++it,++bit;
+                }
+            }
+        }
+        findValidMoves();
+    }
 }

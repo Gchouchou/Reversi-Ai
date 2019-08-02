@@ -74,8 +74,6 @@ void board::placePiece(const coordinate &pos, const occupant piece) {
                 }
             }
         }
-        
- 
     }
 
     // make sure we actually have relevant information

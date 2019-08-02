@@ -15,16 +15,15 @@ namespace reversi
         coordinate cursor;
         coordinate suggested;
         validMoveList validMoves;
-        // if it's false we do a shallow update
-        bool updateType;
         // to prevent too many updates
         std::mutex mutex;
 
         // update the window
-        void updateWin();
+        // if it's false we do a shallow update
+        void updateWin(bool updateType = true);
     public:
         // take input from user
-        void input();
+        bool input();
 
         gui();
         ~gui();

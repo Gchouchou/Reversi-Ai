@@ -41,6 +41,7 @@ board::board() {
     who = white;
     winner = empty;
     isGameOver = false;
+    gameStarted = false;
     findValidMoves();
 }
 
