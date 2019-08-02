@@ -12,7 +12,7 @@ const tile *board::getTile(const coordinate &coord) const {
 void board::getValidMoves(validMoveList &list) const{
     for (auto &&mov : validMoves)
     {
-        list.push_front(new coordinate((*mov).position));
+        list.push_back(new coordinate((*mov).position));
     }
 }
 

@@ -8,14 +8,24 @@
 
 #include <array>
 #include <forward_list>
+#include <vector>
 
 namespace reversi
 {
-    typedef std::forward_list<const coordinate*> validMoveList;
+    typedef std::vector<const coordinate*> validMoveList;
     
     // template deleter
     template <class t>
     void clearList(std::forward_list<t*> &list){
+        while (!list.empty())
+        {
+            t *ptr = list.front();
+            list.pop_front();
+            delete(ptr);
+        }
+    }
+    template <class t>
+    void clearList(std::vector<t*> &list){
         while (!list.empty())
         {
             t *ptr = list.front();
