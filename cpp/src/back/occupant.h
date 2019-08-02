@@ -7,8 +7,15 @@ namespace reversi
         disabled = -1,
         empty,
         white,
-        black
+        black,
+        tie
     };
+    inline occupant flip(const occupant o) {
+        return (occupant)(3 - o);
+    }
+    inline bool isOccupied(const occupant o) {
+        return o > empty;
+    }
 } // namespace reversi
 
 
