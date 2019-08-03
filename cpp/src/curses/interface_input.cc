@@ -26,6 +26,11 @@ bool gui::input() {
         cursor = *validMoves[curIndex];
         updateWin(false);
         break;
+    case 'N':
+        curIndex = (curIndex - 1)%validMoves.size();
+        cursor = *validMoves[curIndex];
+        updateWin(false);
+        break;
     case 'q':
         return false;
         break;

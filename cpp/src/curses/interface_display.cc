@@ -9,11 +9,11 @@ namespace reversi {
         if (c == cursor)
         {
             attron(A_BLINK | A_BOLD);
-            mvaddch(c.y,c.x,ch);
+            mvaddch(c.y,2*c.x,ch);
             attroff(A_BLINK | A_BOLD);
         } else
         {
-            mvaddch(c.y,c.x,ch);
+            mvaddch(c.y,2*c.x,ch);
         }
         
     }
@@ -77,6 +77,6 @@ void reversi::gui::updateWin(bool updateType) {
         break;
     }
     mvaddstr(BOARD_SIDE_LENGTH,1,"'s Turn");
-    wmove(stdscr,cursor.y,cursor.x);
+    wmove(stdscr,cursor.y,2*cursor.x);
     refresh();
 }
