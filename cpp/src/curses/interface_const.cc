@@ -5,7 +5,7 @@
 
 using namespace reversi;
 
-gui::gui() {
+gui::gui(): treeSearch(nullptr){
     // init screen
     initscr();
     keypad(stdscr, TRUE);
@@ -61,12 +61,13 @@ gui::gui() {
     currBoard.getValidMoves(validMoves);
     cursor = *validMoves[0];
     // just assume this for now
-    suggested = *validMoves[0];
+    // suggested = *validMoves[0];
     updateWin();
 }
 
 gui::~gui() {
     // think about removing the other thread
     clearList(validMoves);
+    delete(treeSearch);
     endwin();
 }

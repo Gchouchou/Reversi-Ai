@@ -30,10 +30,7 @@ namespace reversi {
 
         move(const move &copy):position(copy.position), mainDir(copy.mainDir){
             if (copy.directions != nullptr) {
-                for (auto &&d : *copy.directions)
-                {
-                    directions->push_front(d);
-                }
+                directions = new dirList(*copy.directions);
             } else
             {
                 directions = nullptr;

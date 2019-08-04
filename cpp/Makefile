@@ -5,7 +5,7 @@ SRCDIR := src
 BUILDDIR := build
 INCDIR := include
 SRCEXT := cc
-LIBS := -lncurses
+LIBS := -lncurses -lpthread
 TARGET := bin/reversi
 
 SOURCES := $(shell find $(SRCDIR) -type f -name '*.$(SRCEXT)')

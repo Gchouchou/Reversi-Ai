@@ -59,7 +59,7 @@ void reversi::gui::updateWin(bool updateType) {
     {
         attron(COLOR_PAIR(VALID_PAIR)| A_ALTCHARSET);
         writeChar(ACS_DIAMOND,*vm,cursor);
-        attroff(COLOR_PAIR(VALID_PAIR));
+        attroff(COLOR_PAIR(VALID_PAIR)| A_ALTCHARSET);
     }
     if (suggested.x != -1)
     {

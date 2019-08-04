@@ -7,6 +7,8 @@
 
 namespace reversi
 {
+    class tree;
+
     class gui
     {
     private:
@@ -18,10 +20,14 @@ namespace reversi
         int curIndex;
         // to prevent too many updates
         std::mutex mutex;
+        tree *treeSearch;
 
         // update the window
         // if it's false we do a shallow update
         void updateWin(bool updateType = true);
+        void updatecursor(const coordinate &c);
+        void updatesuggested(const coordinate &c);
+        void initializeTree();
     public:
         // retun false when the game is over/or aborted
         // press n to go to next valid move
@@ -31,6 +37,7 @@ namespace reversi
 
         gui();
         ~gui();
+    friend class tree;
     };
 } // namespace gui
 
