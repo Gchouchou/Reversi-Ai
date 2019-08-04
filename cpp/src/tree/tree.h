@@ -40,6 +40,12 @@ namespace reversi {
             flag = false;
             mutex.unlock();
         }
+        bool doneSearch() {
+            mutex.lock();
+            bool a = !flag && done;
+            mutex.unlock();
+            return a;
+        }
         void startSearching();
         void chooseChild(coordinate &c);
         occupant getPlayer() {return player;}

@@ -45,11 +45,15 @@ bool gui::input() {
             th.detach();
         }
         break;
+    case KEY_UP:
+    case KEY_RIGHT:
     case 'n':
         curIndex = (curIndex + 1)%validMoves.size();
         updatecursor(*validMoves[curIndex]);
         updateWin(false);
         break;
+    case KEY_DOWN:
+    case KEY_LEFT:
     case 'N':
         curIndex = (curIndex - 1)%validMoves.size();
         updatecursor(cursor = *validMoves[curIndex]);
