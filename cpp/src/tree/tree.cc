@@ -90,8 +90,6 @@ void tree::startSearching() {
     }
     while (flag)
     {
-        interface->updatesuggested(*bestMove);
-        interface->updateWin(false);
         // selecting the best
         std::vector<child *> best;
         double bestS = -1;
@@ -131,7 +129,13 @@ void tree::startSearching() {
             }
         }
         std::uniform_int_distribution<int> generator2(0,best.size()-1);
-        bestMove = best[generator2(*gen)]->origin;
+        // do a check to save the frames
+        auto buff = best[generator2(*gen)]->origin;
+        if (bestMove != buff && flag) {
+            bestMove = buff;
+            interface->updatesuggested(*bestMove);
+            interface->updateWin(false);
+        }
     }
     bestMove = &d;
     interface->updatesuggested(*bestMove);

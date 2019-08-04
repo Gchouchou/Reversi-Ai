@@ -1,5 +1,6 @@
 #include "interface.h"
 #include "defines.h"
+#include "tree.h"
 
 #include <ncurses.h>
 
