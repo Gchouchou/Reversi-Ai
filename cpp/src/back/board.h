@@ -47,6 +47,7 @@ namespace reversi
         tileList blackEdgeTiles;
         occupant who;
         moveList validMoves;
+        int cvmoves;
         occupant winner;
         bool isGameOver;
         bool gameStarted;
@@ -90,6 +91,7 @@ namespace reversi
         bool playTurn(const coordinate &coord);
         // returns a list of coordinates, must be memory managed
         void getValidMoves (validMoveList &list) const;
+        int countValidMoves() const {return cvmoves;}
         board();
         // copy constructor
         board(const board &copy);

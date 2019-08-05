@@ -1,51 +1,33 @@
 #include "tree.h"
-#include "interface.h"
 
 #include <chrono>
 #include <math.h>
 
 using namespace reversi;
+using namespace MCT;
 
-namespace
-{
-    inline double formula(double win, double sub,unsigned int total) {
-        return (win /sub) + CONSTANT*(sqrt(log(total)/sub));
-    }
-} // namespace
-
-
-const coordinate tree::d(-1,0);
-
-tree::tree(gui &interface, const occupant player):player(player),
+const coordinate MCT::tree::d(-1,0);
+MCT::tree::tree(reversi::gui &interface, reversi::occupant player) :player(player),
 interface(&interface),flag(false),bestMove(&d),done(true),total(0) {
     // current board
-    root = new board(interface.currBoard);
+    root = new board(interface.getBoard());
     // setup the static variables
-    child::player = player;
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     gen = new std::default_random_engine(seed);
-    child::gen = gen;
-    // populate the children
-    validMoveList l;
-    root->getValidMoves(l);
-    for (auto &&m : l)
-    {
-        children.push_back(new child(*root,*m));
-    }
+    node::gen = gen;
+    treeRoot = new node(*root);
 }
 
 tree::~tree() {
-    while (flag && !done)
+    flag = false;
+    while (!done)
     ;
-    // clear the child nodes
-    while (!children.empty())
-    {
-        delete(children.back()->state);
-        delete(children.back());
-        children.pop_back();
-    }
     delete(root);
-    delete(bestMove);
+    delete(treeRoot);
+    if (bestMove != &d)
+    {
+        delete(bestMove);
+    }
     delete(gen);
 }
 
@@ -54,27 +36,12 @@ void tree::chooseChild(coordinate &c) {
     // wait until it's back down
     while (flag && !done)
     ;
-    // select the right child and delete all the rest
-    while (!children.empty())
-    {
-        if (*children.back()->origin == c)
-        {
-            delete(root);
-            root = children.back()->state;
-        } else
-        {
-            delete(children.back()->state);
-        }
-        delete(children.back());
-        children.pop_back();
-    }
-    // populate the children
-    validMoveList l;
-    root->getValidMoves(l);
-    for (auto &&m : l)
-    {
-        children.push_back(new child(*root,*m));
-    }
+    // move down
+    auto d =treeRoot->moveDown(c);
+    delete(treeRoot);
+    // also update root
+    root->playTurn(c);
+    treeRoot = d;
 }
 
 void tree::startSearching() {
@@ -82,61 +49,24 @@ void tree::startSearching() {
     ;
     done = false;
     flag = true;
-    // first run a simulation on every node
-    for (auto &&c : children)
-    {
-        total++;
-        c->runSimulation();
-    }
     while (flag)
     {
-        // selecting the best
-        std::vector<child *> best;
-        double bestS = -1;
-        for (auto &&c : children)
+        auto dummy = (new board(*root));
+        treeRoot->search(*dummy);
+        delete(dummy);
+        // we only update/show when it's on our turn
+        if (root->getWho() == player)
         {
-            double scror = formula(c->win,c->total,total);
-            if (scror > bestS)
+            auto moves = treeRoot->selectBestNode();
+            if (bestMove != moves)
             {
-                bestS = scror;
-                best.clear();
-                best.push_back(c);
+                bestMove = moves;
+                interface->updatesuggested(*bestMove);
+                interface->updateWin(false);
             }
-            else if (scror == bestS)
-            {
-                best.push_back(c);
-            }
-        }
-        // choose a random child to *expand search
-        std::uniform_int_distribution<int> generator(0,best.size()-1);
-        child *searched = best[generator(*gen)];
-        searched->runSimulation();
-        total++;
-        // now we check which one was the most valuable
-        best.clear();
-        bestS = 0;
-        for (auto &&c : children)
-        {
-            if (c->total > bestS)
-            {
-                bestS = c->total;
-                best.clear();
-                best.push_back(c);
-            }
-            else if (c->total == bestS)
-            {
-                best.push_back(c);
-            }
-        }
-        std::uniform_int_distribution<int> generator2(0,best.size()-1);
-        // do a check to save the frames
-        auto buff = best[generator2(*gen)]->origin;
-        if (bestMove != buff && flag) {
-            bestMove = buff;
-            interface->updatesuggested(*bestMove);
-            interface->updateWin(false);
         }
     }
+    // we are done so we just wait
     bestMove = &d;
     interface->updatesuggested(*bestMove);
     done = true;

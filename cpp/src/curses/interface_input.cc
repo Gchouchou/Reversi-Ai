@@ -9,8 +9,8 @@ using namespace reversi;
 void gui::initializeTree() {
     if (treeSearch == nullptr) {
         // initialize the tree and start searching
-        treeSearch = new tree(*this,currBoard.getWho());
-        std::thread th(&tree::startSearching,treeSearch);
+        treeSearch = new MCT::tree(*this,currBoard.getWho());
+        std::thread th(&MCT::tree::startSearching,treeSearch);
         th.detach();
     }
 }
@@ -22,9 +22,9 @@ bool gui::input() {
     {
     case KEY_ENTER:
     case 10:
-        if (treeSearch != nullptr && currBoard.getWho() == treeSearch->getPlayer()) {
+        if (treeSearch != nullptr) {
             treeSearch->setFlag();
-            while (treeSearch->done != true)
+            while (treeSearch->doneSearch() != true)
             ;
         }
         // select move
@@ -40,8 +40,8 @@ bool gui::input() {
         updatecursor(*validMoves[curIndex]);
         updateWin();
         // multi thread...
-        if (treeSearch != nullptr && currBoard.getWho() == treeSearch->getPlayer()) {
-            std::thread th(&tree::startSearching,treeSearch);
+        if (treeSearch != nullptr) {
+            std::thread th(&MCT::tree::startSearching,treeSearch);
             th.detach();
         }
         break;
@@ -64,9 +64,9 @@ bool gui::input() {
         break;
     case 'q':
         // close the thread
-        if (treeSearch != nullptr && currBoard.getWho() == treeSearch->getPlayer()) {
+        if (treeSearch != nullptr ) {
             treeSearch->setFlag();
-            while (treeSearch->done != true)
+            while (treeSearch->doneSearch() != true)
             ;
         }
         return false;

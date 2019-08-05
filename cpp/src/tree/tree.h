@@ -1,7 +1,9 @@
 #ifndef TREE_HEADER
 #define TREE_HEADER
-#include "child.h"
 #include "board.h"
+#include "node.h"
+#include "occupant.h"
+#include "interface.h"
 
 #include <vector>
 #include <mutex>
@@ -11,23 +13,26 @@
 
 namespace reversi {
     class gui;
+}
+
+namespace MCT {
     // very basic implementation of tree search
     class tree
     {
     private:
-        board *root;
-        const coordinate *bestMove;
-        std::vector<child*> children;
+        reversi::board *root;
+        node *treeRoot;
+        const reversi::coordinate *bestMove;
         unsigned int total;
         // thread terminated
         bool done;
         // to signal
-        gui *interface;
+        reversi::gui *interface;
         // lock
         std::mutex mutex;
         std::default_random_engine *gen;
-        occupant player;
-        static const coordinate d;
+        reversi::occupant player;
+        static const reversi::coordinate d;
 
         // update best move
         void updateBest();
@@ -47,11 +52,10 @@ namespace reversi {
             return a;
         }
         void startSearching();
-        void chooseChild(coordinate &c);
-        occupant getPlayer() {return player;}
-        tree(gui &interface, const occupant player);
+        void chooseChild(reversi::coordinate &c);
+        reversi::occupant getPlayer() {return player;}
+        tree(reversi::gui &interface, const reversi::occupant player);
         ~tree();
-        friend class gui;
     };
 }
 

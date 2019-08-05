@@ -104,6 +104,7 @@ void board::findValidMoves() {
     tileList *l = getList(flip(who));
     // clear list
     clearValidMoves();
+    cvmoves = 0;
 
 
     // for every enemy piece...
@@ -132,6 +133,7 @@ void board::findValidMoves() {
                 {
                     auto validMove = new move(*m);
                     validMoves.push_front(validMove);
+                    cvmoves++;
                 }
             }
         }
