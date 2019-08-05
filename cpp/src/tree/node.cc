@@ -54,7 +54,7 @@ node::~node() {
     }
 }
 
-node* node::moveDown(reversi::coordinate &move) {
+node* node::moveDown(reversi::coordinate &move,reversi::board &root) {
     node *rvaluea;
     while (!children->empty())
     {
@@ -70,6 +70,10 @@ node* node::moveDown(reversi::coordinate &move) {
     }
     delete(children);
     children = nullptr;
+    if (rvaluea->children == nullptr)
+    {
+        rvaluea->createChildren(root);
+    }
     return rvaluea;
 }
 
@@ -122,7 +126,7 @@ node *node::selection() {
         double scror;
         if (c->total != 0)
         {
-            if (c->who != this->who)
+            if (c->who == this->who)
             {
                 scror = formula(c->total - c->wins,c->total,this->total);
             }
@@ -132,7 +136,7 @@ node *node::selection() {
             }
         } else
         {
-            scror = 200;
+            scror = 200000000000.0;
         }
         if (scror > bestScore)
         {

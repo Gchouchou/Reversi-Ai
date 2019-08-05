@@ -23,6 +23,7 @@ namespace
             {
                 a = 0.5;
             }
+            a += 10;
             auto d = ( (double) total )/ a;
             ratioTotal += d;
             ratios.push_back(d);
@@ -44,10 +45,8 @@ namespace
 
 reversi::occupant node::playout(reversi::board &state) {
     // if we exceed max count we do not initialize children
-    if (count < MAX_NODES)
-    {
-        createChildren(state);
-    }
+    // if (count < MAX_NODES)
+    createChildren(state);
     // now we play until the end
     validMoveList vlist;
     while(state.getWinner() == empty) {

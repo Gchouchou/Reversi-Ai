@@ -7,7 +7,7 @@
 #include <vector>
 #include <random>
 
-#define MAX_NODES 300
+#define MAX_NODES 100000
 
 namespace MCT
 {
@@ -43,7 +43,7 @@ namespace MCT
         // select the coord that has the most visits
         reversi::coordinate *selectBestNode();
         // move down the tree, return the new root
-        node* moveDown(reversi::coordinate &move);
+        node* moveDown(reversi::coordinate &move,reversi::board &root);
 
         // create from an initial board state, creates all the children
         node(reversi::board &state);
@@ -51,7 +51,6 @@ namespace MCT
         ~node();
         friend class tree;
     };
-    
 } // namespace MCT
 
 

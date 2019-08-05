@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <math.h>
+#include <time.h>
 
 using namespace reversi;
 using namespace MCT;
@@ -36,11 +37,11 @@ void tree::chooseChild(coordinate &c) {
     // wait until it's back down
     while (flag && !done)
     ;
+    root->playTurn(c);
     // move down
-    auto d =treeRoot->moveDown(c);
+    auto d =treeRoot->moveDown(c,*root);
     delete(treeRoot);
     // also update root
-    root->playTurn(c);
     treeRoot = d;
 }
 
@@ -49,7 +50,10 @@ void tree::startSearching() {
     ;
     done = false;
     flag = true;
-    while (flag)
+    struct timespec start, finish;
+    double elapsed;
+    clock_gettime(CLOCK_MONOTONIC,&start);
+    do
     {
         auto dummy = (new board(*root));
         treeRoot->search(*dummy);
@@ -65,7 +69,8 @@ void tree::startSearching() {
                 interface->updateWin(false);
             }
         }
-    }
+        clock_gettime(CLOCK_MONOTONIC,&finish);
+    } while (flag && (finish.tv_sec- start.tv_sec) < 10);
     // we are done so we just wait
     bestMove = &d;
     interface->updatesuggested(*bestMove);
