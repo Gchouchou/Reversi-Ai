@@ -23,7 +23,6 @@ namespace
             {
                 a = 0.5;
             }
-            a += 10;
             auto d = ( (double) total )/ a;
             ratioTotal += d;
             ratios.push_back(d);
@@ -64,7 +63,7 @@ reversi::occupant node::playout(reversi::board &state) {
                 } else
                 {
                     // just add the size to the index
-                    indexes.push_back(s->countValidMoves());
+                    indexes.push_back(s->eval());
                 }
             } else
             {
@@ -78,11 +77,11 @@ reversi::occupant node::playout(reversi::board &state) {
                     return winner;
                 } else if (winner == flip(current)) {
                     // highest number possible
-                    indexes.push_back(50);
+                    indexes.push_back(10000);
                 } else
                 {
                     // tis a tie just a decent number
-                    indexes.push_back(4);
+                    indexes.push_back(20);
                 }
             }
             delete(s);

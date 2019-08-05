@@ -130,3 +130,56 @@ void board::clearDisabled() {
         findValidMoves();
     }
 }
+
+
+double board::eval() const {
+    double subtotal = 0;
+    subtotal += 2*countValidMoves();
+    if (getTile(coordinate(0,0))->piece == who)
+    {
+        subtotal += 30;
+    }
+    if (getTile(coordinate(0,7))->piece == who)
+    {
+        subtotal += 30;
+    }
+    if (getTile(coordinate(7,0))->piece == who)
+    {
+        subtotal += 30;
+    }
+    if (getTile(coordinate(7,7))->piece == who)
+    {
+        subtotal += 30;
+    }
+    for (size_t i = 0; i < 8; i++)
+    {
+        if (getTile(coordinate(0,i))->piece == who ) {
+            subtotal += 2;
+        }
+        if (getTile(coordinate(i,0))->piece == who ) {
+            subtotal += 2;
+        }
+        if (getTile(coordinate(i,7))->piece == who ) {
+            subtotal += 2;
+        }
+        if (getTile(coordinate(7,i))->piece == who ) {
+            subtotal += 2;
+        }
+    }
+    if (getTile(coordinate(0,0))->piece == flip(who))
+    {
+        subtotal /= 4;
+    }
+    if (getTile(coordinate(0,7))->piece == flip(who))
+    {
+        subtotal /= 4;
+    }
+    if (getTile(coordinate(7,0))->piece == flip(who))
+    {
+        subtotal /= 4;
+    }
+    if (getTile(coordinate(7,7))->piece == flip(who))
+    {
+        subtotal /= 4;
+    }
+}

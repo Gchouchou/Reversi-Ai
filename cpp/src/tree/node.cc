@@ -79,7 +79,7 @@ node* node::moveDown(reversi::coordinate &move,reversi::board &root) {
 
 
 reversi::coordinate *node::selectBestNode() {
-    int max(0);
+    unsigned max(0);
     nodeList bests;
     for (auto &&n : *children)
     {

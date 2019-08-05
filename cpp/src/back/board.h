@@ -86,6 +86,8 @@ namespace reversi
         // clears disabled cases from above function, must be used immediately after
         void clearDisabled();
 
+        // shitty evaluation function
+        double eval() const;
         const tile *getTile(const coordinate &coord) const;
         // returns true if the game ends
         bool playTurn(const coordinate &coord);
